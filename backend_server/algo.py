@@ -40,9 +40,9 @@ class Algo:
         current_mean = np.mean(current_time_series_windowed)
 
         if (current_mean + current_time_series_3sigma) > (past_mean + past_time_series_3sigma):
-            return 1.0
-        elif (current_mean - current_time_series_3sigma) < (past_mean - past_time_series_3sigma):
-            return -1.0
+            return np.around((current_mean + current_time_series_3sigma) - (past_mean + past_time_series_3sigma), 2)
+        elif(current_mean - current_time_series_3sigma) < (past_mean - past_time_series_3sigma):
+            return np.around((past_mean - past_time_series_3sigma) - (current_mean - current_time_series_3sigma), 2)
         else:
             return 0.0
 
@@ -61,7 +61,6 @@ class Algo:
 
         self.clf.fit_predict(
             kmeans_matrix, sample_weight=kmeans_weight)
-        print("Predicted")
         node_labels = self.clf.labels_
         hub_centers = self.clf.cluster_centers_
         return hub_centers, node_labels

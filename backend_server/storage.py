@@ -14,7 +14,8 @@ class Storage:
 
         centers, res = self.source.sample(node_number)
 
-        self._nodes = [Node(i, c, r) for c, r, i in zip(centers, res, range(len(res)))]
+        self._nodes = [Node(i, c, r)
+                       for c, r, i in zip(centers, res, range(len(res)))]
         self.cracow_center = np.array([50, 19.9])
 
         self._hubs = []
@@ -57,6 +58,8 @@ class Storage:
 
         for i, node in enumerate(nodes):
             self._hubs[node].nodes.append(i)
+            self._hubs[node].surprise_factor += np.around(
+                self._nodes[i].surprise_factor, 2)
 
         print("Returning")
         return self._nodes, self._hubs
@@ -73,10 +76,12 @@ if __name__ == "__main__":
     # while True:
     node = storage.get_data_and_trigger_algo()[0][0]
     storage.update_nodes()
-    plt.plot([i for i in range(len(node.history["today"]))], node.history["today"], "b")
-    mean = lambda i: np.mean(list(node.history[storage.day_of_week])[i:i + storage.time_window])
+    plt.plot([i for i in range(len(node.history["today"]))],
+             node.history["today"], "b")
+
+    def mean(i): return np.mean(
+        list(node.history[storage.day_of_week])[i:i + storage.time_window])
     r_mean = [mean(i) for i in range(len(node.history["today"]))]
     plt.plot([i for i in range(len(r_mean))], r_mean, "r")
     plt.xlim(0, 48)
     plt.show()
-
