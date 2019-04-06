@@ -8,7 +8,7 @@ class Algo:
         self.hub_number = hub_number
         self.clf = KMeans(n_clusters=self.hub_number)
 
-    def updateNodeSeverity(self, time_series, time_window, current_time, running_average):
+    def calculate_node_severity(self, time_series, time_window, current_time, running_average):
         """
         time series => time series for today
         """
@@ -69,8 +69,8 @@ if __name__ == "__main__":
     alg = Algo(5)
     ts1 = np.random.random(size=(1000,))
     ts2 = np.random.random(size=(1000, ))
-    run1 = alg.updateNodeSeverity(ts1, 100, 60, 0)
-    run2 = alg.updateNodeSeverity(ts1, 100, 200, run1)
+    run1 = alg.calculate_node_severity(ts1, 100, 60, 0)
+    run2 = alg.calculate_node_severity(ts1, 100, 200, run1)
     print(f"Run 1 {run1}, run 2 {run2}")
     surprise = alg.three_sigma_test(ts1, ts2, 100, 300)
     print(surprise)
