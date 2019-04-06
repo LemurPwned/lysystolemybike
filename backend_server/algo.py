@@ -62,7 +62,7 @@ class Algo:
             kmeans_matrix, sample_weight=kmeans_weight)
         node_labels = self.clf.labels_
         hub_centers = self.clf.cluster_centers_
-        return hub_centers
+        return hub_centers, node_labels
 
 
 if __name__ == "__main__":
