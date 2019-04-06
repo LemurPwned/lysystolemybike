@@ -46,7 +46,7 @@ class Storage:
         self._hubs = [Hub(i, h, []) for i, h in enumerate(hubs)]
 
         for i, node in enumerate(nodes):
-            self._hubs[node].nodes.append(id)
+            self._hubs[node].nodes.append(i)
 
         return self._nodes, self._hubs
 
