@@ -16,4 +16,4 @@ if __name__ == "__main__":
         hubs, nodes = storage.get_data()
         return jsonify(hubs=hubs, nodes=nodes)
 
-    app.run(host="0.0.0.0", port=8088, debug=True)
+    app.run(host="0.0.0.0", port=8088, debug=True)    
