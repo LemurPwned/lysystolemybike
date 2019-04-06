@@ -18,7 +18,7 @@ function renderChart(data, labels, nodeId) {
 
 function getNodeData(event) {
   console.log(event);
-  event_data = event.getData();
+  event_data = event.target.getData();
   if (event_data["type"] == "node") {
     node_series = globalNodes[event_data["id"]]["history"]["today"];
     labels = [];
@@ -55,7 +55,9 @@ var globalNodes = null;
 var hubIcon = new H.map.Icon(
   "https://img.icons8.com/office/40/000000/marker.png"
 );
-
+var nodeIcon = new H.map.Icon(
+  "https://img.icons8.com/ultraviolet/0/000000/marker.png"
+);
 // Step 3: make the map interactive
 // mapEvents enables the event system
 // behavior implements default interactions for pan/zoom (also on mobile touch environments)
@@ -85,16 +87,11 @@ function drawHubsAndNodes(hubsAndNodes) {
   for (const n of nodes) {
     // Create an icon object, an object with geographic coordinates and a marker:
     var coords = { lat: n["position"][0], lng: n["position"][1] };
-    var nodeIcon = new H.map.Icon(
-      "https://img.icons8.com/ultraviolet/0/000000/marker.png"
-    );
-    nodeIcon.addEventListener("click", function(evt) {
-      alert(evt);
-    });
+
     icons.push(nodeIcon);
     var marker = new H.map.Marker(coords, { icon: nodeIcon });
     marker.setData({ type: "node", id: n["id"] });
-    marker.addEventListener("select", getNodeData);
+    marker.addEventListener("pointerenter", getNodeData);
 
     map.addObject(marker);
   }
