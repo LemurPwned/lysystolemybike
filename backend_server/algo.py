@@ -50,8 +50,8 @@ class Algo:
         create node matrix
         clf -> classifier class
         """
-        kmeans_matrix = np.empty(shape=(len(node_list, 2)))
-        kmeans_weight = np.empty(shape=(len(node_list,)))
+        kmeans_matrix = np.empty(shape=(len(node_list), 2))
+        kmeans_weight = np.empty(shape=(len(node_list), ))
         for i, node in enumerate(node_list):
             severity = node.severity
             position = node.position

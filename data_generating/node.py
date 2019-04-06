@@ -1,11 +1,12 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 import numpy as np
+
 
 class Node:
     def __init__(self, id, localization, severity):
         self.id = id
-        self.localization = localization
-        self.history = defaultdict(lambda: np.zeros(shape=(48)))
+        self.position = localization
+        self.history = defaultdict(lambda: deque(maxlen=48))
         self.severity = severity
         self.surprise_factor = 0
 
@@ -18,7 +19,7 @@ class Node:
         self.history[day] = new_history
     
     def update_day(self, data):
-        self.history["today"].extend(data)
+        self.history["today"].append(data[0])
 
     def set_surprise_factor(self, val):
         self.surprise_factor = val
