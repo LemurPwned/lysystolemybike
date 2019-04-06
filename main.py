@@ -5,7 +5,7 @@ from backend_server.storage import Storage
 
 class Exposer:
     def __init__(self):
-        self.storage = Storage(10, 5, 20)
+        self.storage = Storage(10, 5, 60)
         self.storage.init_nodes()
 
         self.app = Flask(__name__)

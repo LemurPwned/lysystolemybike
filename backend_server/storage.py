@@ -14,7 +14,7 @@ class Storage:
         self.time_window = time_window
         self.time = 0
         self.day_of_week = "mon"
-        self.source = [OUNoise((1), 42, mu=0., theta=0.15, sigma=0.2) for i in range(node_number)]
+        self.source = [OUNoise((1), np.random.randint(0, 1024), mu=0., theta=0.15, sigma=0.2) for i in range(node_number)]
 
     def init_nodes(self):
         for day in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]:
