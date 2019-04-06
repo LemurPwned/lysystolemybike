@@ -17,7 +17,6 @@ function renderChart(data, labels, nodeId) {
 }
 
 function getNodeData(event) {
-  console.log(event);
   event_data = event.target.getData();
   if (event_data["type"] == "node") {
     node_series = globalNodes[event_data["id"]]["history"]["today"];
@@ -79,14 +78,14 @@ function drawHubsAndNodes(hubsAndNodes) {
 
   for (const h of hubs) {
     // Create an icon object, an object with geographic coordinates and a marker:
-    var coords = { lat: h["position"][0], lng: h["position"][1] };
+    var coords = { lat: h["position"][1], lng: h["position"][0] };
     var marker = new H.map.Marker(coords, { icon: hubIcon });
     marker.setData({ type: "hub", id: h["id"] });
     map.addObject(marker);
   }
   for (const n of nodes) {
     // Create an icon object, an object with geographic coordinates and a marker:
-    var coords = { lat: n["position"][0], lng: n["position"][1] };
+    var coords = { lat: n["position"][1], lng: n["position"][0] };
 
     icons.push(nodeIcon);
     var marker = new H.map.Marker(coords, { icon: nodeIcon });
@@ -96,7 +95,7 @@ function drawHubsAndNodes(hubsAndNodes) {
     map.addObject(marker);
   }
 
-  coords = { lat: hubs[0]["position"][0], lng: hubs[0]["position"][1] };
+  coords = { lat: hubs[0]["position"][1], lng: hubs[0]["position"][0] };
   //   map.setCenter(coords);
 }
 
