@@ -12,7 +12,7 @@ function _apiHelper(route, callback) {
             return;
         }
 
-        if(res.statusCode !== 200 ) {
+        if(res.statusCode !== 200) {
             console.log("Bad status code");
             return;
         }
@@ -21,7 +21,7 @@ function _apiHelper(route, callback) {
     });
 }
 
-function triggerCalculations(onGotResultsCallback) {
+export function triggerCalculations(onGotResultsCallback) {
 
     _apiHelper('trigger_calc', onGotResultsCallback);
 }

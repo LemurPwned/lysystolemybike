@@ -10,7 +10,6 @@ app.get('/', function (req, res) {
 });
 app.get('/map_script.js', function (req, res) {
   
-  // Read HTML to return
   res.sendFile(__dirname + '/map_script.js');
 });
 
