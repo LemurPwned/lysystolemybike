@@ -1,5 +1,6 @@
 from backend_server.algo import Algo
 from data_generating.node import Node
+from data_generating.hub import Hub
 from data_generating.generator import OUNoise
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,6 +30,10 @@ class Storage:
         self.update_nodes()
         self.time += 1
 
+        if self.time==48:
+            self.time = 0
+            [self.source[i].reset() for i in range(len(self.source))]
+
         for node in self._nodes:
             node.update_severity(self.maths.updateNodeSeverity(
                 node.history["today"], self.time_window, self.time, node.history[self.day_of_week][-1]))
@@ -37,9 +42,11 @@ class Storage:
                 list(node.history["today"]), list(node.history[self.day_of_week]), self.time_window, self.time))
 
         hubs, nodes = self.maths.designate_hubs(self._nodes)
-        self._hubs = hubs
+        self._hubs = [Hub(i, h, []) for i, h in enumerate(hubs)]
+
         for i, node in enumerate(nodes):
             self._hubs[node].nodes.append(id)
+
         return self._nodes, self._hubs
 
     def update_nodes(self):

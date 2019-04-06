@@ -1,10 +1,8 @@
+class Hub:
+    def __init__(self, id, position, nodes):
+        self.id = id
+        self.position = None
+        self.nodes = nodes
 
-class hub:
-	def __init__(self, id, nodes, ambulance_amount):
-		self.id = id
-		self.localization = localization
-		self.nodes = nodes
-		self.ambulance_amount = ambulance_amount
-
-	def update_position(self, localization):
-		self.localization = localization
+    def update_position(self, localization):
+        self.position = localization
