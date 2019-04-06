@@ -15,12 +15,16 @@ class Storage:
         centers, res = self.source.sample(node_number)
 
         self._nodes = [Node(i, c, r) for c, r, i in zip(centers, res, range(len(res)))]
+        self.cracow_center = np.array([50, 19.9])
+        self._nodes = [Node(i, self.cracow_center + np.random.random((1)) * 2, 0)
+                       for i in range(node_number)]
         self._hubs = []
         self.time_window = time_window
         self.time = 0
         self.day_of_week = "mon"
         self.random_source = [OUNoise((1), np.random.randint(0, 1024), mu=0.1, theta=0.15, sigma=0.2) for i in
                               range(node_number)]
+
 
     def init_nodes(self):
         for day in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]:
@@ -42,7 +46,8 @@ class Storage:
             [src.reset() for src in self.random_source]
 
         for node in self._nodes:
-            running_average = np.mean(list(node.history[self.day_of_week])[:-self.time_window])
+            running_average = np.mean(
+                list(node.history[self.day_of_week])[:-self.time_window])
             node.update_severity(self.maths.calculate_node_severity(
                 node.history["today"], self.time_window, self.time, running_average))
 
@@ -75,3 +80,4 @@ if __name__ == "__main__":
     plt.plot([i for i in range(len(r_mean))], r_mean, "r")
     plt.xlim(0, 48)
     plt.show()
+

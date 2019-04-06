@@ -1,17 +1,18 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 8080;
-var helmet = require('helmet')
+var helmet = require("helmet");
 
-app.get('/', function (req, res) {
-  
+app.get("/", function(req, res) {
   // Read HTML to return
-  res.sendFile(__dirname + '/map.html');
+  res.sendFile(__dirname + "/chart.html");
 });
-app.get('/map_script.js', function (req, res) {
-  
-  res.sendFile(__dirname + '/map_script.js');
+app.get("/render.js", function(req, res) {
+  res.sendFile(__dirname + "/render.js");
+});
+app.get("/map_script.js", function(req, res) {
+  res.sendFile(__dirname + "/map_script.js");
 });
 
-app.use(helmet.noSniff())
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.use(helmet.noSniff());
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
