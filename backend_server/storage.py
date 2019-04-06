@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 class Storage:
     def __init__(self, hub_number, time_window, node_number):
         self.maths = Algo(hub_number)
-        self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
+        self._nodes = [Node(i, np.random.random((2)) * 2 - 1, 0) for i in range(node_number)]
         self._hubs = []
         self.time_window = time_window
         self.time = 0
@@ -30,7 +30,7 @@ class Storage:
         self.update_nodes()
         self.time += 1
 
-        if self.time==48:
+        if self.time == 48:
             self.time = 0
             [self.source[i].reset() for i in range(len(self.source))]
 
@@ -53,6 +53,7 @@ class Storage:
         for i in range(len(self._nodes)):
             self._nodes[i].update_day(self.source[i].sample())
 
+
 if __name__ == "__main__":
     storage = Storage(10, 5, 50)
     plt.figure()
@@ -67,4 +68,3 @@ if __name__ == "__main__":
         plt.pause(0.01)
         plt.cla()
         plt.draw()
-
