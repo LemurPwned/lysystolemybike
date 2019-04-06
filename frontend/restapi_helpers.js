@@ -1,8 +1,7 @@
 const request = require('request');
 
 module.exports = {
-    getAllNodes: getAllNodes(),
-    getAllHubs: getAllHubs()
+    triggerCalculations: triggerCalculations,
  }
 
 function _apiHelper(route, callback) {
@@ -22,12 +21,7 @@ function _apiHelper(route, callback) {
     });
 }
 
-function getAllNodes(onGotNodesCallback) {
+function triggerCalculations(onGotResultsCallback) {
 
-    _apiHelper('http://localhost:8088/get_nodes', onGotNodesCallback);
-}
-
-function getAllHubs(onGotHubsCallback) {
-
-    _apiHelper('http://localhost:8088/get_hubs', onGotHubsCallback);
+    _apiHelper('trigger_calc', onGotResultsCallback);
 }
