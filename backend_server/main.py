@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 import logging
+from storage import Storage
 
 if __name__ == "__main__":
     
@@ -8,12 +9,11 @@ if __name__ == "__main__":
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
 
-    @app.route('/get_hubs')
-    def get_hubes():
-        return 'Hello, World!'
+    storage = Storage()
 
-    @app.route('/get_nodes')
-    def get_nodes():
-        return 'Hello, World!'
+    @app.route('/trigger_calc')
+    def trigger_calc():
+        hubs, nodes = storage.get_data()
+        return jsonify(hubs=hubs, nodes=nodes)
 
     app.run(host="0.0.0.0", port=8088, debug=True)
