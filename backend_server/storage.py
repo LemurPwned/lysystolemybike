@@ -16,15 +16,13 @@ class Storage:
 
         self._nodes = [Node(i, c, r) for c, r, i in zip(centers, res, range(len(res)))]
         self.cracow_center = np.array([50, 19.9])
-        self._nodes = [Node(i, self.cracow_center + np.random.random((1)) * 2, 0)
-                       for i in range(node_number)]
+
         self._hubs = []
         self.time_window = time_window
         self.time = 0
         self.day_of_week = "mon"
         self.random_source = [OUNoise((1), np.random.randint(0, 1024), mu=0.1, theta=0.15, sigma=0.2) for i in
                               range(node_number)]
-
 
     def init_nodes(self):
         for day in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]:
@@ -60,6 +58,7 @@ class Storage:
         for i, node in enumerate(nodes):
             self._hubs[node].nodes.append(i)
 
+        print("Returning")
         return self._nodes, self._hubs
 
     def update_nodes(self):

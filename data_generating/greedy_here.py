@@ -33,7 +33,7 @@ class HereAPI:
                 try:
                     x = random.random()*(self.xlim[1]-self.xlim[0])+self.xlim[0]
                     y = random.random()*(self.ylim[1]-self.ylim[0])+self.ylim[0]
-                    center = (self.xlim[0] + x * self.resolution[0], self.ylim[0] + y * self.resolution[1])
+                    center = (x, y)
                     url = self.url_builder.build(center)
                     r = requests.get(url)
                     parsed = self.parse_street(r.json())

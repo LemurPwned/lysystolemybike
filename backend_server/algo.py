@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 import tqdm
 
+
 class Algo:
     def __init__(self, hub_number):
         self.running_average = 0.0
