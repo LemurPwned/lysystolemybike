@@ -10,6 +10,9 @@ app.get("/", function(req, res) {
 app.get("/render.js", function(req, res) {
   res.sendFile(__dirname + "/render.js");
 });
+app.get("/map_script.js", function(req, res) {
+  res.sendFile(__dirname + "/map_script.js");
+});
 
 app.use(helmet.noSniff());
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

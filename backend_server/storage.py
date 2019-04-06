@@ -9,12 +9,15 @@ import matplotlib.pyplot as plt
 class Storage:
     def __init__(self, hub_number, time_window, node_number):
         self.maths = Algo(hub_number)
-        self._nodes = [Node(i, np.random.random((2)) * 2, 0) for i in range(node_number)]
+        self.cracow_center = np.array([50, 19.9])
+        self._nodes = [Node(i, self.cracow_center + np.random.random((1)) * 2, 0)
+                       for i in range(node_number)]
         self._hubs = []
         self.time_window = time_window
         self.time = 0
         self.day_of_week = "mon"
-        self.source = [OUNoise((1), np.random.randint(0, 1024), mu=0., theta=0.15, sigma=0.2) for i in range(node_number)]
+        self.source = [OUNoise((1), np.random.randint(
+            0, 1024), mu=0., theta=0.15, sigma=0.2) for i in range(node_number)]
 
     def init_nodes(self):
         for day in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]:
@@ -35,7 +38,8 @@ class Storage:
             [self.source[i].reset() for i in range(len(self.source))]
 
         for node in self._nodes:
-            running_average = np.mean(list(node.history[self.day_of_week])[:-self.time_window])
+            running_average = np.mean(
+                list(node.history[self.day_of_week])[:-self.time_window])
             node.update_severity(self.maths.calculate_node_severity(
                 node.history["today"], self.time_window, self.time, running_average))
 
@@ -63,8 +67,11 @@ if __name__ == "__main__":
     while True:
         node = storage.get_data_and_trigger_algo()[0][0]
         # storage.update_nodes()
-        plt.plot([i for i in range(len(node.history["today"]))], node.history["today"], "b")
-        mean = lambda i: np.mean(list(node.history[storage.day_of_week])[i:i+storage.time_window])
+        plt.plot([i for i in range(len(node.history["today"]))],
+                 node.history["today"], "b")
+
+        def mean(i): return np.mean(
+            list(node.history[storage.day_of_week])[i:i+storage.time_window])
         r_mean = [mean(i) for i in range(len(node.history["today"]))]
         plt.plot([i for i in range(len(r_mean))], r_mean, "r")
         plt.ylim(0, 1)
