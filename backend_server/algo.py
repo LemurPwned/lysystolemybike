@@ -12,8 +12,8 @@ class Algo:
         """
         time series => time series for today
         """
-        # calculate MAD
-        # return MAD
+        # calculate SAD
+        # return SAD
         if current_time < time_window:
             time_window = current_time
         past_time = current_time - time_window

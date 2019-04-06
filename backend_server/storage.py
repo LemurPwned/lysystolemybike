@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 class Storage:
     def __init__(self, hub_number, time_window, node_number):
         self.maths = Algo(hub_number)
-        self._nodes = [Node(i, np.random.random((2)) * 2 - 1, 0) for i in range(node_number)]
+        self._nodes = [Node(i, np.random.random((2)) * 2, 0) for i in range(node_number)]
         self._hubs = []
         self.time_window = time_window
         self.time = 0
