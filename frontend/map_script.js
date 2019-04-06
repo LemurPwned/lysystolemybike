@@ -109,9 +109,16 @@ function drawHubsAndNodes(hubsAndNodes) {
   hubs = hubsAndNodes["hubs"];
   nodes = hubsAndNodes["nodes"];
   globalNodes = nodes;
+
+  var group = new H.map.Group();
+  map.addObject(group);
+
   // Remove all markets
   for (const o of map.getObjects()) {
-    if (o instanceof H.DomMarker) {
+    if (o instanceof H.map.DomMarker) {
+      map.removeObject(o);
+    }
+    if (o instanceof H.map.Marker) {
       map.removeObject(o);
     }
   }
@@ -120,7 +127,25 @@ function drawHubsAndNodes(hubsAndNodes) {
     // Create an icon object, an object with geographic coordinates and a marker:
     var coords = { lat: h["position"][1], lng: h["position"][0] };
     var marker = new H.map.Marker(coords, { icon: hubIcon });
-    marker.setData({ type: "hub", id: h["id"] });
+    marker.setData({
+      type: "hub",
+      id: h["id"],
+      surprise: h["surprise_factor"]
+    });
+    marker.addEventListener(
+      "tap",
+      function(evt) {
+        // event target is the marker itself, group is a parent event target
+        // for all objects that it contains
+        var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
+          // read custom data
+          content: JSON.stringify(evt.target.getData())
+        });
+        // show info bubble
+        ui.addBubble(bubble);
+      },
+      false
+    );
     var nodeIcon = new H.map.DomIcon(
       svgMarkup.replace("${COLOR}", colors[h["id"]])
     );

@@ -11,18 +11,22 @@ class traffic_parser():
             # linux
             raise NotImplementedError()
         elif platform == "win32":
-            self.driverPath = os.path.join(os.path.dirname(__file__), 'chromedriver.exe')
+            self.driverPath = os.path.join(
+                os.path.dirname(__file__), 'chromedriver.exe')
         else:
             raise Exception('Unknown OS')
 
         options = webdriver.ChromeOptions()
         # options.add_argument('headless')
-        self.driver = webdriver.Chrome(executable_path=self.driverPath, chrome_options=options)
+        self.driver = webdriver.Chrome(
+            executable_path=self.driverPath, chrome_options=options)
         self.driver.get('https://mapdevelopers.com/geocode_tool.php')
 
     def _get_point_names(self):
-        app_id = 'rlMEySEzBAIiBb4wHJmK'
-        app_code = 'titSvx7OlgN9VRkqP6058Q'
+        # app_id = 'rlMEySEzBAIiBb4wHJmK'
+        app_id = 'devportal-demo-20180625'
+        # app_code = 'titSvx7OlgN9VRkqP6058Q'
+        app_code = '9v2BkviRwi9Ot26kp2IysQ'
         url = f"""https://traffic.api.here.com/traffic/6.1/flow.json?bbox=50.0839%2C19.8824%3B50.0354%2C19.9669&app_id={app_id}&app_code={app_code}"""
 
         r = requests.get(url).json()
@@ -37,7 +41,8 @@ class traffic_parser():
     def _resolve_name(self, name):
 
         place = self.driver.find_element_by_class_name('form-control')
-        confirm_button = self.driver.find_element_by_class_name('input-group-btn').find_element_by_class_name('btn')
+        confirm_button = self.driver.find_element_by_class_name(
+            'input-group-btn').find_element_by_class_name('btn')
 
         place.send_keys(name)
         # confirm_button.click()
