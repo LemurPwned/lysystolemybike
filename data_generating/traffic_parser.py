@@ -1,6 +1,7 @@
 from selenium import webdriver
 from sys import platform
 import requests
+import time
 import os
 
 class traffic_parser():
@@ -16,7 +17,7 @@ class traffic_parser():
 		options = webdriver.ChromeOptions()
 		#options.add_argument('headless')
 		self.driver = webdriver.Chrome(executable_path = self.driverPath, chrome_options = options)
-		self.driver.get('https://www.latlong.net/')
+		self.driver.get('https://mapdevelopers.com/geocode_tool.php')
 
 	def _get_point_names(self):
 		app_id = 'rlMEySEzBAIiBb4wHJmK'
@@ -34,15 +35,29 @@ class traffic_parser():
 
 	def _resolve_name(self, name):
 		
-		place = self.driver.find_elements_by_id('place')
-		confirm_button = self.driver.find_elements_by_id('btnfind')
+		place = self.driver.find_element_by_class_name('form-control')
+		confirm_button = self.driver.find_element_by_class_name('input-group-btn').find_element_by_class_name('btn')
 
 		place.send_keys(name)
-		self.driver.execute_script("arguments[0].click();", confirm_button)
+		#confirm_button.click()
+		self.driver.execute_script('arguments[0].click();', confirm_button)
+		place.clear()
+
+		time.sleep(5)
+
+		#latitude = self.driver.find_element_by_name('lat').text
+		#longtitude = self.driver.find_element_by_name('lng').text
+
+		#print(latitude)
+		#print(longtitude)
 
 
 if __name__ == '__main__':
 	test = traffic_parser()
-	#print(test._get_point_names())
+	zomg = list(test._get_point_names())
+	print(zomg)
 
-	test._resolve_name('kek')
+	for kek in zomg:
+		test._resolve_name(kek)	
+
+	
