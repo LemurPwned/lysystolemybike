@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.cluster import KMeans
-
+import tqdm
 
 class Algo:
     def __init__(self, hub_number):
@@ -60,6 +60,7 @@ class Algo:
 
         self.clf.fit_predict(
             kmeans_matrix, sample_weight=kmeans_weight)
+        print("Predicted")
         node_labels = self.clf.labels_
         hub_centers = self.clf.cluster_centers_
         return hub_centers, node_labels

@@ -23,7 +23,7 @@ class OUNoise:
         dx = self.theta * (self.mu - x) + self.sigma * \
             np.array([random.random() for i in range(len(x))])
         self.state = x + dx
-        return self.state
+        return np.clip(self.state*5, 0, 10)
 
     def get_data(self):
         return self.sample()
