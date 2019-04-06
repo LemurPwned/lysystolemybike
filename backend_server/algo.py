@@ -24,21 +24,31 @@ class Algo:
 
     def three_sigma_test(self, time_series, past_time_series, time_window, current_time):
         """
-        time series => historic representation of past time series
+        past time series => historic representation of past time series
+        current time series => historic representation of past time series
         time widnow => calculation window
         """
         if current_time < time_window:
             time_window = current_time
         past_time_series_windowed = past_time_series[current_time-time_window:]
         past_time_series_3sigma = 3*np.var(past_time_series_windowed)
+        past_mean = np.mean(past_time_series_windowed)
 
         current_time_series_windowed = time_series[current_time-time_window:]
         current_time_series_3sigma = 3*np.var(current_time_series_windowed)
-        return past_time_series_3sigma - current_time_series_3sigma
+        current_mean = np.mean(current_time_series_windowed)
 
-    def designate_hubs(self, node_list, hub_number):
+        if (current_mean + current_time_series_3sigma) > (past_mean + past_time_series_3sigma):
+            return 1.0
+        elif (current_mean - current_time_series_3sigma) < (past_mean - past_time_series_3sigma):
+            return -1.0
+        else:
+            return 0.0
+
+    def designate_hubs(self, node_list):
         """
         create node matrix
+        clf -> classifier class
         """
         kmeans_matrix = np.empty(shape=(len(node_list, 2)))
         kmeans_weight = np.empty(shape=(len(node_list,)))
@@ -48,7 +58,8 @@ class Algo:
             kmeans_matrix[i, :] = np.array([*position])
             kmeans_weight[i] = severity
 
-        self.clf.fit_predict(kmeans_matrix, sample_weight=kmeans_weight)
+        self.clf.fit_predict(
+            kmeans_matrix, sample_weight=kmeans_weight)
         node_labels = self.clf.labels_
         hub_centers = self.clf.cluster_centers_
         return hub_centers
