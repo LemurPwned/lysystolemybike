@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 import logging
 from backend_server.storage import Storage
 
@@ -26,7 +26,10 @@ class Exposer:
             hubs = [h.__dict__ for h in hubs]
             print(hubs)
             print(nodes)
-            return jsonify(hubs=hubs, nodes=nodes)
+            resp = jsonify(hubs=hubs, nodes=nodes)
+            resp.headers['Access-Control-Allow-Origin'] = '*'
+            resp.headers['Content-Type'] = 'application/json'
+            return resp
 
     def start(self):
         print('Exposer run on port 5000')
