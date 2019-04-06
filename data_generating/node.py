@@ -5,6 +5,7 @@ import numpy as np
 class Node:
     def __init__(self, id, localization, severity):
         self.id = id
+        print("Node:", localization)
         self.position = localization
         self.history = defaultdict(lambda: deque(maxlen=48))
         self.severity = severity

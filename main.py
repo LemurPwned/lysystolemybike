@@ -15,6 +15,7 @@ class Exposer:
 
         @self.app.route('/trigger_calc')
         def trigger_calc():
+            print("Triggering")
             nodes, hubs = self.storage.get_data_and_trigger_algo()
 
             nodes = [n.__dict__ for n in nodes]
@@ -24,8 +25,6 @@ class Exposer:
                     n['history'][day] = list(n['history'][day])
 
             hubs = [h.__dict__ for h in hubs]
-            print(hubs)
-            print(nodes)
             resp = jsonify(hubs=hubs, nodes=nodes)
             resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers['Content-Type'] = 'application/json'
