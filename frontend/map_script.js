@@ -61,7 +61,6 @@ var nodeIcon = new H.map.Icon(
 // mapEvents enables the event system
 // behavior implements default interactions for pan/zoom (also on mobile touch environments)
 var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-var icons = [];
 // Step 4: create the default UI component, for displaying bubbles
 var ui = H.ui.UI.createDefault(map, defaultLayers);
 
@@ -86,17 +85,14 @@ function drawHubsAndNodes(hubsAndNodes) {
   for (const n of nodes) {
     // Create an icon object, an object with geographic coordinates and a marker:
     var coords = { lat: n["position"][1], lng: n["position"][0] };
-
-    icons.push(nodeIcon);
     var marker = new H.map.Marker(coords, { icon: nodeIcon });
     marker.setData({ type: "node", id: n["id"] });
     marker.addEventListener("pointerenter", getNodeData);
-
     map.addObject(marker);
   }
 
   coords = { lat: hubs[0]["position"][1], lng: hubs[0]["position"][0] };
-  //   map.setCenter(coords);
+  map.setCenter(coords);
 }
 
 $.ajax({
