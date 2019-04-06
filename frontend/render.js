@@ -20,9 +20,7 @@ $.ajax({
   url: "http://localhost:5000/trigger_calc",
   type: "GET",
   dataType: "json",
-  success: function(result, nodeId) {
-    renderData(result);
-  },
+  success: renderData,
   error: function(result) {
     console.log(result.status + " " + result.statusText);
   }
