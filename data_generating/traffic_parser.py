@@ -1,8 +1,22 @@
+from selenium import webdriver
+from sys import platform
 import requests
+import os
 
 class traffic_parser():
 	def __init__(self):
-		
+		if platform == "linux" or platform == "linux2":
+			# linux
+			raise NotImplementedError()
+		elif platform == "win32":
+			self.driverPath = os.path.join(os.path.dirname(__file__), 'chromedriver.exe')
+		else:
+			raise Exception('Unknown OS')
+
+		options = webdriver.ChromeOptions()
+		#options.add_argument('headless')
+		self.driver = webdriver.Chrome(executable_path = self.driverPath, chrome_options = options)
+		self.driver.get('https://www.latlong.net/')
 
 	def _get_point_names(self):
 		app_id = 'rlMEySEzBAIiBb4wHJmK'
@@ -18,9 +32,17 @@ class traffic_parser():
 
 		return aux
 
-	def _resolve_name(self):
+	def _resolve_name(self, name):
+		
+		place = self.driver.find_elements_by_id('place')
+		confirm_button = self.driver.find_elements_by_id('btnfind')
+
+		place.send_keys(name)
+		self.driver.execute_script("arguments[0].click();", confirm_button)
 
 
 if __name__ == '__main__':
 	test = traffic_parser()
-	print(test._get_point_names())
+	#print(test._get_point_names())
+
+	test._resolve_name('kek')
