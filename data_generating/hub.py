@@ -7,4 +7,4 @@ class hub:
 		self.ambulance_amount = ambulance_amount
 
 	def update_position(self, localization):
-		pass
+		self.localization = localization
