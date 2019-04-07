@@ -47,19 +47,20 @@ class Storage:
         for node in self._nodes:
             running_average = np.mean(
                 list(node.history[self.day_of_week])[:-self.time_window])
+            running_average_today = np.mean(
+                list(node.history["today"])[:-self.time_window])
 
-            aux = self.maths.calculate_node_severity(
-                node.history["today"], self.time_window, self.time, running_average)
+            node.running_average.append(running_average_today)
 
-            node.update_severity(aux)
-            node.running_average = aux
+            node.update_severity(self.maths.calculate_node_severity(
+                node.history["today"], self.time_window, self.time, running_average))
 
             aux, sigma3 = self.maths.three_sigma_test(list(node.history["today"]),
                 list(node.history[self.day_of_week]), self.time_window, self.time)
 
             node.set_surprise_factor(aux)
 
-            node.sigma3 = sigma3
+            node.sigma3.append(sigma3)
 
         hubs, nodes = self.maths.designate_hubs(self._nodes)
         self._hubs = [Hub(i, h, []) for i, h in enumerate(hubs)]

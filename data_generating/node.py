@@ -10,8 +10,8 @@ class Node:
         self.history = defaultdict(lambda: deque(maxlen=48))
         self.severity = severity
         self.surprise_factor = 0
-        self.sigma3 = 0
-        self.running_average = 0
+        self.sigma3 = []
+        self.running_average = []
 
     def update_severity(self, severity):
         self.severity = severity
