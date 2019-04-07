@@ -37,8 +37,6 @@ var svgMarkup =
 
 colors = [
   "blue",
-  "red",
-  "green",
   "black",
   "yellow",
   "orange",
