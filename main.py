@@ -40,7 +40,7 @@ class Exposer:
 
             self.affinity_algo = not self.affinity_algo
 
-            self.trigger_calc()
+            return self.trigger_calc()
 
 
     def start(self):
