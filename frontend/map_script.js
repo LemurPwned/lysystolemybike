@@ -252,7 +252,7 @@ function drawHubsAndNodes(hubsAndNodes) {
             avg_radius += dist / n;
             var severity = nodes[ni]['severity'];
             var delta = [sev_colors[1][0] - sev_colors[0][0], sev_colors[1][1] - sev_colors[0][1], sev_colors[1][2] - sev_colors[0][2]];
-            modifier = Math.tanh(severity / 10 * 2);
+            modifier = Math.tanh(severity / 10 * 3);
             var nodeColor = [parseInt(delta[0] * modifier + sev_colors[0][0]), parseInt(delta[1] * modifier + sev_colors[0][1]), parseInt(delta[2] * modifier + sev_colors[0][2])];
             var clr = "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
 
