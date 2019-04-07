@@ -24,8 +24,8 @@ class Storage:
         self.time_window = time_window
         self.time = 0
         self.day_of_week = "mon"
-        self.random_source = [OUNoise((1), np.random.randint(0, 1024), mu=0.1, theta=0.15, sigma=0.2) for i in
-                              range(node_number)]
+        self.random_source = [OUNoise((1), np.random.randint(
+        0, 1024), mu=0.1, theta=0.15, sigma=np.random.random()*0.4) for i in range(node_number)]
 
     def init_nodes(self):
         for day in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]:
@@ -55,7 +55,6 @@ class Storage:
                     list(node.history["today"])[:-self.time_window])
                 self.initalised = True
 
-
             running_average_today = np.mean(
                 list(node.history["today"])[:-self.time_window])
 
@@ -65,7 +64,7 @@ class Storage:
                 node.history["today"], self.time_window, self.time, running_average))
 
             aux, sigma3 = self.maths.three_sigma_test(list(node.history["today"]),
-                list(node.history[self.day_of_week]), self.time_window, self.time)
+                                                      list(node.history[self.day_of_week]), self.time_window, self.time)
 
             node.set_surprise_factor(aux)
 
@@ -86,7 +85,8 @@ class Storage:
         for i in range(len(self._nodes)):
             noise = self.random_source[i].sample()
             try:
-                self._nodes[i].update_day(noise*(self._nodes[i].history['today'][-1]*0.1 + 0.4*np.random.pareto(3., 1)[0]))
+                self._nodes[i].update_day(
+                    np.clip(noise*(self._nodes[i].history['today'][-1]*0.1 + 0.4*np.random.pareto(3., 1)[0]), 0, 10))
             except IndexError:
                 self._nodes[i].update_day(noise)
 
@@ -98,7 +98,8 @@ if __name__ == "__main__":
     while True:
         node = storage.get_data_and_trigger_algo()[0][0]
         # storage.update_nodes()
-        plt.plot([i for i in range(len(node.history["today"]))], node.history["today"], "b")
+        plt.plot([i for i in range(len(node.history["today"]))],
+                 node.history["today"], "b")
         plt.ylim(0, 10)
         plt.xlim(0, 48)
         plt.pause(0.01)
