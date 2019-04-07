@@ -158,9 +158,11 @@ function drawHubsAndNodes(hubsAndNodes) {
       function(evt) {
         // event target is the marker itself, group is a parent event target
         // for all objects that it contains
+        d = evt.target.getData()
+        sd = "<div style=\"font-size: x-small;\"><b>ID:</b> " + d["id"] + "<br><b>Surprise:</b> " + d["surprise"].toFixed(2) + "</div>";
         var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
           // read custom data
-          content: JSON.stringify(evt.target.getData())
+          content: sd
         });
         // show info bubble
         ui.addBubble(bubble);
