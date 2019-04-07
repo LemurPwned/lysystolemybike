@@ -45,7 +45,7 @@ class Exposer:
 
     def start(self):
         print('Exposer run on port 5000')
-        self.app.run(host='0.0.0.0', debug=True)
+        self.app.run(host='0.0.0.0', debug=False)
 
 
 if __name__ == "__main__":
