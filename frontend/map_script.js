@@ -1,5 +1,5 @@
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  var R = 6371; // Radius of the earth in km
+  var R = 6371.0; // Radius of the earth in km
   var dLat = deg2rad(lat2 - lat1); // deg2rad below
   var dLon = deg2rad(lon2 - lon1);
   var a =
@@ -53,6 +53,15 @@ colors = [
 ];
 function renderChart(data, labels, nodeId, color) {
   var ctx = document.getElementById("myChart").getContext("2d");
+  var sigma3 = [];
+  for (var i = 0; i < data.length; i++) {
+    sigma3.push(2.5);
+  }
+  var avg = [];
+  for (var i = 0; i < data.length; i++) {
+    avg.push(3.7);
+  }
+
   var myChart = new Chart(ctx, {
     type: "line",
     data: {
@@ -62,13 +71,27 @@ function renderChart(data, labels, nodeId, color) {
 
       datasets: [
         {
+          label: "3 sigma",
+          data: sigma3,
+          backgroundColor: "red",
+          fill: false
+        },
+        {
+          label: "Avg",
+          data: avg,
+          backgroundColor: "green",
+          fill: false
+        },
+        {
           label: `Node ${nodeId}`,
           data: data,
-          backgroundColor: color,
-          fillColor: "rgba(220,220,220,0.8)",
-          strokeColor: "yellow"
+          backgroundColor: color
         }
       ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
     }
   });
 }
@@ -142,6 +165,7 @@ function drawHubsAndNodes(hubsAndNodes) {
       map.removeObject(o);
     }
   }
+
   current_hub_centers = [];
   current_colors = [];
   for (const h of hubs) {
@@ -175,26 +199,27 @@ function drawHubsAndNodes(hubsAndNodes) {
       false
     );
     var color = colors[h["id"]];
-    if (past_colors.length == 0) {
+    if (past_colors.length != 0) {
       current_distances = [];
       for (k = 0; k < past_hub_centers.length; k++) {
-        const dist = getDistanceFromLatLonInKm(
-          h["position"][0],
+        var dist = getDistanceFromLatLonInKm(
           h["position"][1],
-          past_hub_centers[k][0],
-          past_hub_centers[k][1]
+          h["position"][0],
+          past_hub_centers[k][1],
+          past_hub_centers[k][0]
         );
         current_distances.push(dist);
       }
+      console.log(current_distances);
       const indexOfMinValue = current_distances.indexOf(
         Math.min(...current_distances)
       );
       color = past_colors[indexOfMinValue];
-      past_hub_centers.splice(indexOfMinValue, 1);
-      past_colors.splice(indexOfMinValue, 1);
+    } else {
+      console.log(color);
     }
     current_colors.push(color);
-    current_hub_centers.push(h["id"]);
+    current_hub_centers.push(h["position"]);
     var nodeIcon = new H.map.DomIcon(svgMarkup.replace("${COLOR}", color));
     for (const ni of h["nodes"]) {
       var coords = {
@@ -209,8 +234,8 @@ function drawHubsAndNodes(hubsAndNodes) {
     map.addObject(marker);
   }
   // current now become past
-  past_hub_centers = current_hub_centers;
-  past_colors = current_colors;
+  past_hub_centers = current_hub_centers.slice();
+  past_colors = current_colors.slice();
 }
 
 function timerCallback() {
@@ -224,7 +249,7 @@ function timerCallback() {
     }
   });
 
-  setTimeout(timerCallback, 3000);
+  setTimeout(timerCallback, 30000);
 }
 
 timerCallback();
