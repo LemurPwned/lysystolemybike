@@ -31,7 +31,7 @@ class Exposer:
             resp.headers['Content-Type'] = 'application/json'
             return resp
 
-        @sef.app.route('/toggle_cluster')
+        @self.app.route('/toggle_cluster')
         def toggle_cluster():
             if self.affinity_algo:
                 self.storage.maths.type = 'affinity'
