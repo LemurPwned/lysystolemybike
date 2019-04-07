@@ -61,13 +61,13 @@ function renderChart(data, labels, nodeId, color) {
             datasets: [
                 {
                     label: "3 sigma",
-                    data: globalNodes[nodeId]["sigma3"],
+                    data: globalNodes[nodeId]["sigma3"].slice(-48),
                     backgroundColor: "red",
                     fill: false
                 },
                 {
                     label: "Avg",
-                    data: globalNodes[nodeId]["running_average"],
+                    data: globalNodes[nodeId]["running_average"].slice(-48),
                     backgroundColor: "green",
                     fill: false
                 },
@@ -90,7 +90,17 @@ function renderChart(data, labels, nodeId, color) {
                             max: 10
                         }
                     }
+                ],
+                xAxes: [
+                    {
+                        display: true,
+                        ticks: {
+                            min: 0,
+                            max: 47
+                        }
+                    }
                 ]
+
             }
         }
     });
@@ -110,6 +120,8 @@ function getNodeData(event) {
             labels.push(i);
             severity.push(globalNodes[event_data["id"]])
         }
+        if (node_series.length > 48)
+            node_series = node_series.slice(node_series.length - 48);
         renderChart(node_series, labels, event_data["id"], event_data["color"]);
     }
 }
@@ -135,8 +147,9 @@ var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
 var hubIconPath = "icons/icon2.png";
 var nodeIconPath = "icons/icon3.png";
 
-var hubIcon = new H.map.DomIcon(
-    '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient2" cx="0.5" cy="0.5" r="0.9"><stop offset="0%" stop-color="orange"/><stop offset="100%" stop-color="blue"/></radialGradient></defs><rect x="0" y="0" rx="3" ry="3" width="30" height="30" fill="#385a7c" stroke="black" stroke-width="1" stroke-linecap="butt"/> </svg>'
+var hubIcon = new H.map.Icon(
+    // '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient2" cx="0.5" cy="0.5" r="0.9"><stop offset="0%" stop-color="orange"/><stop offset="100%" stop-color="blue"/></radialGradient></defs><rect x="0" y="0" rx="3" ry="3" width="30" height="30" fill="#385a7c" stroke="black" stroke-width="1" stroke-linecap="butt"/> </svg>'
+    "https://img.icons8.com/ultraviolet/0/000000/marker.png"
 );
 
 var nodeIcon = new H.map.Icon(
@@ -175,7 +188,7 @@ function drawHubsAndNodes(hubsAndNodes) {
     for (const h of hubs) {
         // Create an icon object, an object with geographic coordinates and a marker:
         var coords = { lat: h["position"][1], lng: h["position"][0] };
-        var marker = new H.map.DomMarker(coords, { icon: hubIcon });
+        var marker = new H.map.Marker(coords, { icon: hubIcon });
         marker.setData({
             type: "hub",
             id: h["id"],
@@ -239,7 +252,7 @@ function drawHubsAndNodes(hubsAndNodes) {
             avg_radius += dist / n;
             var severity = nodes[ni]['severity'];
             var delta = [sev_colors[1][0] - sev_colors[0][0], sev_colors[1][1] - sev_colors[0][1], sev_colors[1][2] - sev_colors[0][2]];
-            modifier = Math.tanh(severity/10*2);
+            modifier = Math.tanh(severity / 10 * 2);
             var nodeColor = [parseInt(delta[0] * modifier + sev_colors[0][0]), parseInt(delta[1] * modifier + sev_colors[0][1]), parseInt(delta[2] * modifier + sev_colors[0][2])];
             var clr = "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
 
