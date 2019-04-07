@@ -1,3 +1,6 @@
+var globalHubs = null;
+var globalNodes = null;
+
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   var R = 6371.0; // Radius of the earth in km
   var dLat = deg2rad(lat2 - lat1); // deg2rad below
@@ -55,11 +58,11 @@ function renderChart(data, labels, nodeId, color) {
   var ctx = document.getElementById("myChart").getContext("2d");
   var sigma3 = [];
   for (var i = 0; i < data.length; i++) {
-    sigma3.push(2.5);
+    sigma3.push(globalNodes[nodeId]["sigma3"]);
   }
   var avg = [];
   for (var i = 0; i < data.length; i++) {
-    avg.push(3.7);
+    avg.push(globalNodes[nodeId]["running_average"]);
   }
 
   var myChart = new Chart(ctx, {
@@ -91,7 +94,18 @@ function renderChart(data, labels, nodeId, color) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              min: 0,
+              max: 10
+            }
+          }
+        ]
+      }
     }
   });
 }
@@ -132,8 +146,6 @@ var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
 // Define icon
 var hubIconPath = "icons/icon2.png";
 var nodeIconPath = "icons/icon3.png";
-var globalHubs = null;
-var globalNodes = null;
 
 var hubIcon = new H.map.Icon(
   "https://img.icons8.com/office/40/000000/marker.png"
@@ -210,13 +222,10 @@ function drawHubsAndNodes(hubsAndNodes) {
         );
         current_distances.push(dist);
       }
-      console.log(current_distances);
       const indexOfMinValue = current_distances.indexOf(
         Math.min(...current_distances)
       );
       color = past_colors[indexOfMinValue];
-    } else {
-      console.log(color);
     }
     current_colors.push(color);
     current_hub_centers.push(h["position"]);
@@ -245,11 +254,11 @@ function timerCallback() {
     dataType: "json",
     success: drawHubsAndNodes,
     error: function(result) {
-      alert(result.status + " " + result.statusText);
+      alert("Server offline");
     }
   });
 
-  setTimeout(timerCallback, 30000);
+  setTimeout(timerCallback, 3000);
 }
 
 timerCallback();
