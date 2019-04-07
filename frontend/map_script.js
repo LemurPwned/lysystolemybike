@@ -16,11 +16,9 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
-
-function preserveColors(hubs) {
-  current_distances = [];
-  for (i = 0; i < hubs.size; i++) {}
-}
+var current_hub_centers = [];
+var past_hub_centers = [];
+var past_colors = [];
 
 var svgMarkup =
   '<svg style="left:-14px;top:-36px;"' +
@@ -144,6 +142,8 @@ function drawHubsAndNodes(hubsAndNodes) {
       map.removeObject(o);
     }
   }
+  current_hub_centers = [];
+  current_colors = [];
   for (const h of hubs) {
     // Create an icon object, an object with geographic coordinates and a marker:
     var coords = { lat: h["position"][1], lng: h["position"][0] };
@@ -158,8 +158,13 @@ function drawHubsAndNodes(hubsAndNodes) {
       function(evt) {
         // event target is the marker itself, group is a parent event target
         // for all objects that it contains
-        d = evt.target.getData()
-        sd = "<div style=\"font-size: x-small;\"><b>ID:</b> " + d["id"] + "<br><b>Surprise:</b> " + d["surprise"].toFixed(2) + "</div>";
+        d = evt.target.getData();
+        sd =
+          '<div style="font-size: x-small;"><b>ID:</b> ' +
+          d["id"] +
+          "<br><b>Surprise:</b> " +
+          d["surprise"].toFixed(2) +
+          "</div>";
         var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
           // read custom data
           content: sd
@@ -169,9 +174,28 @@ function drawHubsAndNodes(hubsAndNodes) {
       },
       false
     );
-    var nodeIcon = new H.map.DomIcon(
-      svgMarkup.replace("${COLOR}", colors[h["id"]])
-    );
+    var color = colors[h["id"]];
+    if (past_colors.length == 0) {
+      current_distances = [];
+      for (k = 0; k < past_hub_centers.length; k++) {
+        const dist = getDistanceFromLatLonInKm(
+          h["position"][0],
+          h["position"][1],
+          past_hub_centers[k][0],
+          past_hub_centers[k][1]
+        );
+        current_distances.push(dist);
+      }
+      const indexOfMinValue = current_distances.indexOf(
+        Math.min(...current_distances)
+      );
+      color = past_colors[indexOfMinValue];
+      past_hub_centers.splice(indexOfMinValue, 1);
+      past_colors.splice(indexOfMinValue, 1);
+    }
+    current_colors.push(color);
+    current_hub_centers.push(h["id"]);
+    var nodeIcon = new H.map.DomIcon(svgMarkup.replace("${COLOR}", color));
     for (const ni of h["nodes"]) {
       var coords = {
         lat: nodes[ni]["position"][1],
@@ -184,6 +208,9 @@ function drawHubsAndNodes(hubsAndNodes) {
     }
     map.addObject(marker);
   }
+  // current now become past
+  past_hub_centers = current_hub_centers;
+  past_colors = current_colors;
 }
 
 function timerCallback() {
