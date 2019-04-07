@@ -48,6 +48,12 @@ class Exposer:
 
             return self.trigger_calc()
 
+        @self.app.route('/time_period')
+        def change_time_period():
+            self.storage.time_window = request.args.get('time_period')
+
+            return self.trigger_calc()
+
 
     def start(self):
         print('Exposer run on port 5000')
