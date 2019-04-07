@@ -26,22 +26,23 @@ var past_colors = [];
 var svgMarkup =
     '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
 
+var alpha = "0.2";
 colors = [
-  "blue",
-  "black",
-  "yellow",
-  "orange",
-  "magenta",
-  "teal",
-  "cyan",
-  "gray",
-  "maroon",
-  "olive",
-  "lime",
-  "purple",
-  "fuchsia",
-  "navy",
-  "aqua"
+  "rgba(0, 0, 255, " + alpha + ")",
+  "rgba(0, 0, 0, " + alpha + ")",
+  "rgba(255, 255, 0, " + alpha + ")",
+  "rgba(255, 165, 0, " + alpha + ")",
+  "rgba(255, 0, 255, " + alpha + ")",
+  "rgba(0, 0, 255, " + alpha + ")",
+  "rgba(0, 128, 128, " + alpha + ")",
+  "rgba(128, 128, 128, " + alpha + ")",
+  "rgba(128, 0, 0, " + alpha + ")",
+  "rgba(128, 128, 0, " + alpha + ")",
+  "rgba(0, 255, 0, " + alpha + ")",
+  "rgba(128, 0, 128, " + alpha + ")",
+  "rgba(255, 0, 255, " + alpha + ")",
+  "rgba(0, 0, 128, " + alpha + ")",
+  "rgba(0, 255, 255, " + alpha + ")"
 ];
 function renderChart(data, labels, nodeId, color) {
     var ctx = document.getElementById("myChart").getContext("2d");
