@@ -257,6 +257,9 @@ function drawHubsAndNodes(hubsAndNodes) {
   past_colors = current_colors.slice();
 }
 
+var timeInSecs = 0;
+var simTimeTimer = document.getElementById('realTime');
+
 function timerCallback() {
   $.ajax({
     url: "http://localhost:5000/trigger_calc",
@@ -269,6 +272,21 @@ function timerCallback() {
   });
 
   setTimeout(timerCallback, 3000);
+  hours = Math.floor(timeInSecs / 3600);
+  minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
+  secs = Math.floor(timeInSecs - (minutes * 60));
+  var timerStr = "";
+  if (hours < 10) timerStr += "0" + hours;
+  else timerStr += hours
+  timerStr += ":";
+  if (minutes < 10) timerStr += "0" + minutes;
+  else timerStr += minutes
+  timerStr += ":";
+  if (secs < 10) timerStr += "0" + secs;
+  else timerStr += secs
+
+  simTimeTimer.innerHTML = timerStr;
+  timeInSecs += 5 * 60;
 }
 
 timerCallback();
