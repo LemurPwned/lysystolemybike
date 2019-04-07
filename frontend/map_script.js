@@ -1,4 +1,26 @@
-// Step 1: initialize communication with the platform
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+}
+
+function preserveColors(hubs) {
+    current_distances = [];
+    for (i = 0; i < hubs.size; i++) { }
+}
 
 var svgMarkup =
     '<svg style="left:-14px;top:-36px;"' +
@@ -33,6 +55,15 @@ colors = [
 ];
 function renderChart(data, labels, nodeId, color) {
     var ctx = document.getElementById("myChart").getContext("2d");
+    var sigma3 = [];
+    for (var i = 0; i < data.length; i++) {
+        sigma3.push(2.5);
+    }
+    var avg = [];
+    for (var i = 0; i < data.length; i++) {
+        avg.push(3.7);
+    }
+
     var myChart = new Chart(ctx, {
         type: "line",
         data: {
@@ -42,11 +73,21 @@ function renderChart(data, labels, nodeId, color) {
 
             datasets: [
                 {
+                    label: '3 sigma',
+                    data: sigma3,
+                    backgroundColor: "red",
+                    fill: false
+                },
+                {
+                    label: 'Avg',
+                    data: avg,
+                    backgroundColor: "green",
+                    fill: false
+                },
+                {
                     label: `Node ${nodeId}`,
                     data: data,
                     backgroundColor: color,
-                    fillColor: "rgba(220,220,220,0.8)",
-                    strokeColor: "yellow"
                 }
             ]
         },
@@ -55,9 +96,6 @@ function renderChart(data, labels, nodeId, color) {
             maintainAspectRatio: false
         }
     });
-    var w = parseInt($("myChart").width(), 10);
-    var h = parseInt($("myChart").height(), 10);
-    $("myChart").width(w).height(h);
 }
 
 function mapColourToRGB(number) {
@@ -92,7 +130,6 @@ var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
     zoom: 13,
     pixelRatio: pixelRatio
 });
-map.getViewPort().resize();
 
 // Define icon
 var hubIconPath = "icons/icon2.png";
@@ -130,7 +167,6 @@ function drawHubsAndNodes(hubsAndNodes) {
             map.removeObject(o);
         }
     }
-
     for (const h of hubs) {
         // Create an icon object, an object with geographic coordinates and a marker:
         var coords = { lat: h["position"][1], lng: h["position"][0] };
@@ -145,9 +181,11 @@ function drawHubsAndNodes(hubsAndNodes) {
             function (evt) {
                 // event target is the marker itself, group is a parent event target
                 // for all objects that it contains
+                d = evt.target.getData()
+                sd = "<div style=\"font-size: x-small;\"><b>ID:</b> " + d["id"] + "<br><b>Surprise:</b> " + d["surprise"].toFixed(2) + "</div>";
                 var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
                     // read custom data
-                    content: JSON.stringify(evt.target.getData())
+                    content: sd
                 });
                 // show info bubble
                 ui.addBubble(bubble);
@@ -169,25 +207,20 @@ function drawHubsAndNodes(hubsAndNodes) {
         }
         map.addObject(marker);
     }
-    //   for (const n of nodes) {
-    //     // Create an icon object, an object with geographic coordinates and a marker:
-    //     var coords = { lat: n["position"][1], lng: n["position"][0] };
-    //     var marker = new H.map.Marker(coords, { icon: nodeIcon });
-    //     marker.setData({ type: "node", id: n["id"] });
-    //     marker.addEventListener("pointerenter", getNodeData);
-    //     map.addObject(marker);
-    //   }
-
-    //   coords = { lat: hubs[0]["position"][1], lng: hubs[0]["position"][0] };
-    //   map.setCenter(coords);
 }
 
-$.ajax({
-    url: "http://localhost:5000/trigger_calc",
-    type: "GET",
-    dataType: "json",
-    success: drawHubsAndNodes,
-    error: function (result) {
-        alert(result.status + " " + result.statusText);
-    }
-});
+function timerCallback() {
+    $.ajax({
+        url: "http://localhost:5000/trigger_calc",
+        type: "GET",
+        dataType: "json",
+        success: drawHubsAndNodes,
+        error: function (result) {
+            alert(result.status + " " + result.statusText);
+        }
+    });
+
+    setTimeout(timerCallback, 3000);
+}
+
+timerCallback();
