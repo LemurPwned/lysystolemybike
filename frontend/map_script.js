@@ -334,21 +334,6 @@ function timerCallback() {
         }
     });
 
-<<<<<<< HEAD
-    setTimeout(timerCallback, 3000);
-    hours = Math.floor(timeInSecs / 3600);
-    minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
-    secs = Math.floor(timeInSecs - (minutes * 60));
-    var timerStr = "";
-    if (hours < 10) timerStr += "0" + hours;
-    else timerStr += hours
-    timerStr += ":";
-    if (minutes < 10) timerStr += "0" + minutes;
-    else timerStr += minutes
-    timerStr += ":";
-    if (secs < 10) timerStr += "0" + secs;
-    else timerStr += secs
-=======
   setTimeout(timerCallback, 3000);
   hours = Math.floor(timeInSecs / 3600);
   minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
@@ -362,10 +347,9 @@ function timerCallback() {
   timerStr += ":";
   if (secs < 10) timerStr += "0" + secs;
   else timerStr += secs
->>>>>>> 82672d0adc5e26574086ffa6ff2719ed59e68e0f
 
     simTimeTimer.innerHTML = timerStr;
-    timeInSecs += 5 * 60;
+    timeInSecs += 30 * 60;
 }
 
 timerCallback();
