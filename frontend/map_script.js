@@ -93,8 +93,17 @@ function renderChart(data, labels, nodeId, color) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
-        }
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        min: 0,
+                        max: 10
+                    }
+                }]
+            }
+        },
     });
 }
 
@@ -216,7 +225,7 @@ function timerCallback() {
         dataType: "json",
         success: drawHubsAndNodes,
         error: function (result) {
-            alert(result.status + " " + result.statusText);
+            alert("Server offline");
         }
     });
 
