@@ -18,6 +18,7 @@ class Storage:
                        for c, r, i in zip(centers, res, range(len(res)))]
         # self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
         self.cracow_center = np.array([50, 19.9])
+        self.initalised = False
 
         self._hubs = []
         self.time_window = time_window
@@ -49,18 +50,26 @@ class Storage:
             running_average = np.mean(
                 list(node.history[self.day_of_week])[:-self.time_window])
 
-            aux = self.maths.calculate_node_severity(
-                node.history["today"], self.time_window, self.time, running_average)
+            if self.initalised:
+                running_average_today = np.mean(
+                    list(node.history["today"])[:-self.time_window])
+                self.initalised = True
 
-            node.update_severity(aux)
-            node.running_average = aux
+
+            running_average_today = np.mean(
+                list(node.history["today"])[:-self.time_window])
+
+            node.running_average.append(running_average_today)
+
+            node.update_severity(self.maths.calculate_node_severity(
+                node.history["today"], self.time_window, self.time, running_average))
 
             aux, sigma3 = self.maths.three_sigma_test(list(node.history["today"]),
                 list(node.history[self.day_of_week]), self.time_window, self.time)
 
             node.set_surprise_factor(aux)
 
-            node.sigma3 = sigma3
+            node.sigma3.append(sigma3)
 
         hubs, nodes = self.maths.designate_hubs(self._nodes)
         self._hubs = [Hub(i, h, []) for i, h in enumerate(hubs)]
