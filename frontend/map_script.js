@@ -58,14 +58,6 @@ colors = [
 ];
 function renderChart(data, labels, nodeId, color) {
     var ctx = document.getElementById("myChart").getContext("2d");
-    var sigma3 = [];
-    for (var i = 0; i < data.length; i++) {
-        sigma3.push(globalNodes[nodeId]["sigma3"]);
-    }
-    var avg = [];
-    for (var i = 0; i < data.length; i++) {
-        avg.push(globalNodes[nodeId]["running_average"]);
-    }
 
     var myChart = new Chart(ctx, {
         type: "line",
@@ -77,13 +69,13 @@ function renderChart(data, labels, nodeId, color) {
             datasets: [
                 {
                     label: '3 sigma',
-                    data: sigma3,
+                    data: globalNodes[nodeId]["sigma3"],
                     backgroundColor: "red",
                     fill: false
                 },
                 {
                     label: 'Avg',
-                    data: avg,
+                    data: globalNodes[nodeId]["running_average"],
                     backgroundColor: "green",
                     fill: false
                 },
