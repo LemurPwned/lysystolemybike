@@ -1,3 +1,6 @@
+var globalHubs = null;
+var globalNodes = null;
+
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371; // Radius of the earth in km
     var dLat = deg2rad(lat2 - lat1); // deg2rad below
@@ -57,11 +60,11 @@ function renderChart(data, labels, nodeId, color) {
     var ctx = document.getElementById("myChart").getContext("2d");
     var sigma3 = [];
     for (var i = 0; i < data.length; i++) {
-        sigma3.push(2.5);
+        sigma3.push(globalNodes[nodeId]["sigma3"]);
     }
     var avg = [];
     for (var i = 0; i < data.length; i++) {
-        avg.push(3.7);
+        avg.push(globalNodes[nodeId]["running_average"]);
     }
 
     var myChart = new Chart(ctx, {
@@ -143,8 +146,6 @@ var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
 // Define icon
 var hubIconPath = "icons/icon2.png";
 var nodeIconPath = "icons/icon3.png";
-var globalHubs = null;
-var globalNodes = null;
 
 var hubIcon = new H.map.Icon(
     "https://img.icons8.com/office/40/000000/marker.png"
