@@ -301,7 +301,7 @@ function timerCallback() {
   setTimeout(timerCallback, 3000);
   hours = Math.floor(timeInSecs / 3600);
   minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
-  secs = Math.floor(timeInSecs - (minutes * 60));
+  secs = Math.floor(timeInSecs - (hours * 3600) - (minutes * 60));
   var timerStr = "";
   if (hours < 10) timerStr += "0" + hours;
   else timerStr += hours
