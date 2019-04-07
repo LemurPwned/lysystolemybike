@@ -1,5 +1,21 @@
 var globalHubs = null;
 var globalNodes = null;
+var current_hub_centers = [];
+var past_hub_centers = [];
+var past_colors = [];
+
+var svgMarkup =
+  '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
+
+const alpha = "0.2";
+const sev_colors = [[0, 204, 0], [204, 0, 0]];
+const delta = [
+  sev_colors[1][0] - sev_colors[0][0],
+  sev_colors[1][1] - sev_colors[0][1],
+  sev_colors[1][2] - sev_colors[0][2]
+];
+
+const legend = { severe: 8, serious: 5, important: 3, mild: 0 };
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   var R = 6371.0; // Radius of the earth in km
@@ -16,41 +32,43 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
-legend = {'severe': 1, 'serious': 1, 'important':1, 'mild': 0}
-function draw_legend(){
-    var container = document.getElementById('container');
-  
-    for (var key in colorList) {
-        var boxContainer = document.createElement("DIV");
-        var box = document.createElement("DIV");
-        var label = document.createElement("SPAN");
+function draw_legend(legend) {
+  var container = document.getElementById("container");
+  var wrapper = document.createElement("wrapper");
+  // wrapper.style =
+  // "display: grid; grid-gap: 5px; grid-template-columns: 90px 60px; paddding: 60px;";
+  wrapper.style =
+    "display: grid; grid-gap: 5px; grid-template-columns: 60px 60px 60px 60px 60px 60px 60px 60px; paddding: 60px;";
+  for (var key in legend) {
+    var label = document.createElement("SPAN");
+    label.innerHTML = key;
+    label.style = "color: white";
+    wrapper.appendChild(label);
 
-        label.innerHTML = key;
-        box.className = "box";
-        box.style.backgroundColor = colorList[key];
+    var img = document.createElement("DIV");
+    img.style = "pading=10px;border-radius: 5px;height: 60px;";
+    img.innerHTML = svgMarkup.replace("${COLOR}", clr);
 
-        boxContainer.appendChild(box);
-        boxContainer.appendChild(label);
+    severity = legend[key];
+    modifier = Math.tanh((severity / 10) * 2);
+    var nodeColor = [
+      parseInt(delta[0] * modifier + sev_colors[0][0]),
+      parseInt(delta[1] * modifier + sev_colors[0][1]),
+      parseInt(delta[2] * modifier + sev_colors[0][2])
+    ];
+    var clr =
+      "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
 
-        container.appendChild(boxContainer);
-
-   }
+    wrapper.appendChild(img);
+  }
+  container.appendChild(wrapper);
 }
-}
+draw_legend(legend);
 
-var current_hub_centers = [];
-var past_hub_centers = [];
-var past_colors = [];
-
-var svgMarkup =
-  '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
-
-var alpha = "0.2";
 colors = [
   "rgba(0, 0, 255, " + alpha + ")",
   "rgba(0, 0, 0, " + alpha + ")",
@@ -68,6 +86,7 @@ colors = [
   "rgba(0, 0, 128, " + alpha + ")",
   "rgba(0, 255, 255, " + alpha + ")"
 ];
+
 function renderChart(data, labels, nodeId, color) {
   var ctx = document.getElementById("myChart").getContext("2d");
   var myChart = new Chart(ctx, {
@@ -124,8 +143,10 @@ function getNodeData(event) {
   if (event_data["type"] == "node") {
     node_series = globalNodes[event_data["id"]]["history"]["today"];
     labels = [];
+    severity = [];
     for (i = 0; i < node_series.length; i++) {
       labels.push(i);
+      severity.push(globalNodes[event_data["id"]]);
     }
     renderChart(node_series, labels, event_data["id"], event_data["color"]);
   }
@@ -170,7 +191,6 @@ function drawHubsAndNodes(hubsAndNodes) {
   hubs = hubsAndNodes["hubs"];
   nodes = hubsAndNodes["nodes"];
   globalNodes = nodes;
-
 
   // Remove all markets
   for (const o of map.getObjects()) {
@@ -239,7 +259,6 @@ function drawHubsAndNodes(hubsAndNodes) {
 
     var avg_radius = 0;
     var n = h["nodes"].length;
-    var nodeIcon = new H.map.DomIcon(svgMarkup.replace("${COLOR}", color));
     for (const ni of h["nodes"]) {
       var coords = {
         lat: nodes[ni]["position"][1],
@@ -253,7 +272,24 @@ function drawHubsAndNodes(hubsAndNodes) {
         h["position"][0]
       );
       avg_radius += dist / n;
+      var severity = nodes[ni]["severity"];
+      var delta = [
+        sev_colors[1][0] - sev_colors[0][0],
+        sev_colors[1][1] - sev_colors[0][1],
+        sev_colors[1][2] - sev_colors[0][2]
+      ];
+      modifier = Math.tanh((severity / 10) * 2);
+      var nodeColor = [
+        parseInt(delta[0] * modifier + sev_colors[0][0]),
+        parseInt(delta[1] * modifier + sev_colors[0][1]),
+        parseInt(delta[2] * modifier + sev_colors[0][2])
+      ];
+      var clr =
+        "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
+
+      var nodeIcon = new H.map.DomIcon(svgMarkup.replace("${COLOR}", clr));
       var marker2 = new H.map.DomMarker(coords, { icon: nodeIcon });
+
       marker2.setData({ type: "node", id: ni, color: color });
       marker2.addEventListener("pointerenter", getNodeData);
       map.addObject(marker2);

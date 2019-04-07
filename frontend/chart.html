@@ -1,45 +1,84 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Hub</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/custom.css" />
 
     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893"
+    />
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-core.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-service.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+    ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
-    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-core.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-service.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"
+    ></script>
+  </head>
 
-</head>
-
-<body style="background-color: #f2f2f2" style="position: relative;">
+  <body style="background-color: #f2f2f2" style="position: relative;">
     <nav class="navbar navbar-dark bg-dark mxauto">
-        <span class="navbar-brand">Hub</span>
+      <span class="navbar-brand">Hub</span>
+      <div style="position: fixed; right: 200px" id="container"></div>
     </nav>
     <div style="width: 100%; height: 100%;">
-        <div id="map" style="width: 100%; height: 1046px; background: grey; position: absolute; z-index: -1;">
-            <div class="card shadow fixed-bottom pull-right" style="width: 60%; height: 30%; position: absolute; z-index: 2;">
-                <canvas id="myChart"></canvas>
-            </div>
+      <div
+        id="map"
+        style="width: 100%; height: 1046px; background: grey; position: absolute; z-index: -1;"
+      >
+        <div
+          class="card shadow fixed-bottom pull-right"
+          style="width: 60%; height: 30%; position: absolute; z-index: 2;"
+        >
+          <canvas id="myChart"></canvas>
         </div>
+      </div>
     </div>
-</body>
+    <!-- <div -->
+    <!-- style="width: 150px; background: #fff; position: fixed; bottom: 0; right: 80px;" -->
+    <!-- > -->
+    <!-- <div id="container"></div> -->
+    <!-- </div> -->
+  </body>
 
-
-
-<script type="text/javascript" src="./map_script.js"></script>
-
+  <script type="text/javascript" src="./map_script.js"></script>
 </html>
