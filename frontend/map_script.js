@@ -1,5 +1,37 @@
 var globalHubs = null;
 var globalNodes = null;
+const legend = { severe: 7, serious: 5, important: 3, mild: 0 };
+
+var current_hub_centers = [];
+var past_hub_centers = [];
+var past_colors = [];
+
+var svgMarkup =
+    '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
+
+const alpha = "0.2";
+const colors = [
+    "rgba(0, 0, 255, " + alpha + ")",
+    "rgba(0, 0, 0, " + alpha + ")",
+    "rgba(255, 255, 0, " + alpha + ")",
+    "rgba(255, 165, 0, " + alpha + ")",
+    "rgba(255, 0, 255, " + alpha + ")",
+    "rgba(0, 0, 255, " + alpha + ")",
+    "rgba(0, 128, 128, " + alpha + ")",
+    "rgba(128, 128, 128, " + alpha + ")",
+    "rgba(128, 0, 0, " + alpha + ")",
+    "rgba(128, 128, 0, " + alpha + ")",
+    "rgba(0, 255, 0, " + alpha + ")",
+    "rgba(128, 0, 128, " + alpha + ")",
+    "rgba(255, 0, 255, " + alpha + ")",
+    "rgba(0, 0, 128, " + alpha + ")",
+    "rgba(0, 255, 255, " + alpha + ")"
+];
+const sev_colors = [
+    [0, 204, 0],
+    [204, 0, 0]
+];
+const delta = [sev_colors[1][0] - sev_colors[0][0], sev_colors[1][1] - sev_colors[0][1], sev_colors[1][2] - sev_colors[0][2]];
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     var R = 6371.0; // Radius of the earth in km
@@ -19,35 +51,40 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
 function deg2rad(deg) {
     return deg * (Math.PI / 180);
 }
-var current_hub_centers = [];
-var past_hub_centers = [];
-var past_colors = [];
 
-var svgMarkup =
-    '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
+function draw_legend(legend) {
+    var container = document.getElementById("container");
+    var wrapper = document.createElement("wrapper");
+    // wrapper.style =
+    // "display: grid; grid-gap: 5px; grid-template-columns: 90px 60px; paddding: 60px;";
+    wrapper.style =
+        "display: grid; grid-gap: 5px; grid-template-columns: 60px 60px 60px 60px 60px 60px 60px 60px; paddding: 60px;";
+    for (var key in legend) {
+        var label = document.createElement("SPAN");
+        label.innerHTML = key;
+        label.style = "color: white";
+        wrapper.appendChild(label);
 
-var alpha = "0.2";
-colors = [
-    "rgba(0, 0, 255, " + alpha + ")",
-    "rgba(0, 0, 0, " + alpha + ")",
-    "rgba(255, 255, 0, " + alpha + ")",
-    "rgba(255, 165, 0, " + alpha + ")",
-    "rgba(255, 0, 255, " + alpha + ")",
-    "rgba(0, 0, 255, " + alpha + ")",
-    "rgba(0, 128, 128, " + alpha + ")",
-    "rgba(128, 128, 128, " + alpha + ")",
-    "rgba(128, 0, 0, " + alpha + ")",
-    "rgba(128, 128, 0, " + alpha + ")",
-    "rgba(0, 255, 0, " + alpha + ")",
-    "rgba(128, 0, 128, " + alpha + ")",
-    "rgba(255, 0, 255, " + alpha + ")",
-    "rgba(0, 0, 128, " + alpha + ")",
-    "rgba(0, 255, 255, " + alpha + ")"
-];
-sev_colors = [
-    [0, 204, 0],
-    [204, 0, 0]
-];
+        var img = document.createElement("DIV");
+        img.style = "pading=10px;border-radius: 5px;height: 60px;";
+
+        severity = legend[key];
+        modifier = Math.tanh((severity / 10) * 1.5 );
+        var nodeColor = [
+            parseInt(delta[0] * modifier + sev_colors[0][0]),
+            parseInt(delta[1] * modifier + sev_colors[0][1]),
+            parseInt(delta[2] * modifier + sev_colors[0][2])
+        ];
+        var clr =
+            "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
+        img.innerHTML = svgMarkup.replace("${COLOR}", clr);
+
+        wrapper.appendChild(img);
+    }
+    container.appendChild(wrapper);
+}
+draw_legend(legend);
+
 
 function renderChart(data, labels, nodeId, color) {
     var ctx = document.getElementById("myChart").getContext("2d");
@@ -251,7 +288,6 @@ function drawHubsAndNodes(hubsAndNodes) {
             );
             avg_radius += dist / n;
             var severity = nodes[ni]['severity'];
-            var delta = [sev_colors[1][0] - sev_colors[0][0], sev_colors[1][1] - sev_colors[0][1], sev_colors[1][2] - sev_colors[0][2]];
             modifier = Math.tanh(severity / 10 * 3);
             var nodeColor = [parseInt(delta[0] * modifier + sev_colors[0][0]), parseInt(delta[1] * modifier + sev_colors[0][1]), parseInt(delta[2] * modifier + sev_colors[0][2])];
             var clr = "rgb(" + nodeColor[0] + "," + nodeColor[1] + "," + nodeColor[2] + ")";
@@ -298,22 +334,22 @@ function timerCallback() {
         }
     });
 
-  setTimeout(timerCallback, 3000);
-  hours = Math.floor(timeInSecs / 3600);
-  minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
-  secs = Math.floor(timeInSecs - (minutes * 60));
-  var timerStr = "";
-  if (hours < 10) timerStr += "0" + hours;
-  else timerStr += hours
-  timerStr += ":";
-  if (minutes < 10) timerStr += "0" + minutes;
-  else timerStr += minutes
-  timerStr += ":";
-  if (secs < 10) timerStr += "0" + secs;
-  else timerStr += secs
+    setTimeout(timerCallback, 3000);
+    hours = Math.floor(timeInSecs / 3600);
+    minutes = Math.floor((timeInSecs - (hours * 3600)) / 60);
+    secs = Math.floor(timeInSecs - (minutes * 60));
+    var timerStr = "";
+    if (hours < 10) timerStr += "0" + hours;
+    else timerStr += hours
+    timerStr += ":";
+    if (minutes < 10) timerStr += "0" + minutes;
+    else timerStr += minutes
+    timerStr += ":";
+    if (secs < 10) timerStr += "0" + secs;
+    else timerStr += secs
 
-  simTimeTimer.innerHTML = timerStr;
-  timeInSecs += 5 * 60;
+    simTimeTimer.innerHTML = timerStr;
+    timeInSecs += 5 * 60;
 }
 
 timerCallback();
