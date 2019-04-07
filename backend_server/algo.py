@@ -39,7 +39,7 @@ class Algo:
         past_mean = np.mean(past_time_series_windowed)
 
         current_time_series_windowed = time_series[current_time-time_window:]
-        current_time_series_3sigma = 3*np.var(current_time_series_windowed)
+        current_time_series_3sigma = 3*np.std(current_time_series_windowed)
         current_mean = np.mean(current_time_series_windowed)
 
         if (current_mean + current_time_series_3sigma) > (past_mean + past_time_series_3sigma):

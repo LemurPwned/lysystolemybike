@@ -5,6 +5,7 @@ from data_generating.generator import OUNoise
 from data_generating.greedy_here import HereAPI
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 
 class Storage:
@@ -45,6 +46,8 @@ class Storage:
         if self.time == 48:
             self.time = 0
             [src.reset() for src in self.random_source]
+            for node in self._nodes:
+                node.finish_day(self.day_of_week) 
 
         for node in self._nodes:
             running_average = np.mean(

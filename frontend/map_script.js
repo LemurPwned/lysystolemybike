@@ -62,7 +62,7 @@ function draw_legend(legend) {
     for (var key in legend) {
         var label = document.createElement("SPAN");
         label.innerHTML = key;
-        label.style = "color: white";
+        label.style = "color: white;vertical-align: middle;";
         wrapper.appendChild(label);
 
         var img = document.createElement("DIV");
@@ -97,7 +97,7 @@ function renderChart(data, labels, nodeId, color) {
 
             datasets: [
                 {
-                    label: "3 sigma",
+                    label: "Severity",
                     data: globalNodes[nodeId]["sigma3"].slice(-48),
                     backgroundColor: "red",
                     fill: false
@@ -176,7 +176,7 @@ var defaultLayers = platform.createDefaultLayers({
 // Step 2: initialize a map
 var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
     center: new H.geo.Point(50.0647, 19.945),
-    zoom: 12.5,
+    zoom: 13,
     pixelRatio: pixelRatio,
 });
 
@@ -325,7 +325,7 @@ var simTimeTimer = document.getElementById('realTime');
 
 function timerCallback() {
     $.ajax({
-        url: "http://localhost:5000/trigger_calc",
+        url: "http://172.20.47.34:5000/trigger_calc",
         type: "GET",
         dataType: "json",
         success: drawHubsAndNodes,
