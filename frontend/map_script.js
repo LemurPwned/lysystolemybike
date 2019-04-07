@@ -330,7 +330,7 @@ function timerCallback() {
         dataType: "json",
         success: drawHubsAndNodes,
         error: function (result) {
-            alert("Server offline");
+            // alert("Server offline");
         }
     });
 
