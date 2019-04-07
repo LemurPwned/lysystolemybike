@@ -12,11 +12,11 @@ class Storage:
         self.maths = Algo(hub_number)
         self.source = HereAPI()
 
-        # centers, res = self.source.sample(node_number)
+        centers, res = self.source.sample(node_number)
 
-        # self._nodes = [Node(i, c, r)
-        #                for c, r, i in zip(centers, res, range(len(res)))]
-        self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
+        self._nodes = [Node(i, c, r)
+                       for c, r, i in zip(centers, res, range(len(res)))]
+        # self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
         self.cracow_center = np.array([50, 19.9])
 
         self._hubs = []
@@ -77,7 +77,7 @@ class Storage:
         for i in range(len(self._nodes)):
             noise = self.random_source[i].sample()
             try:
-                self._nodes[i].update_day(noise*(self._nodes[i].history['today'][-1]*0.1 + 0.4*np.random.pareto(3., 1)))
+                self._nodes[i].update_day(noise*(self._nodes[i].history['today'][-1]*0.1 + 0.4*np.random.pareto(3., 1)[0]))
             except IndexError:
                 self._nodes[i].update_day(noise)
 
