@@ -18,6 +18,7 @@ class Storage:
                        for c, r, i in zip(centers, res, range(len(res)))]
         # self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
         self.cracow_center = np.array([50, 19.9])
+        self.initalised = False
 
         self._hubs = []
         self.time_window = time_window
@@ -48,6 +49,13 @@ class Storage:
         for node in self._nodes:
             running_average = np.mean(
                 list(node.history[self.day_of_week])[:-self.time_window])
+
+            if self.initalised:
+                running_average_today = np.mean(
+                    list(node.history["today"])[:-self.time_window])
+                self.initalised = True
+
+
             running_average_today = np.mean(
                 list(node.history["today"])[:-self.time_window])
 
