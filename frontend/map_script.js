@@ -24,7 +24,7 @@ var past_hub_centers = [];
 var past_colors = [];
 
 var svgMarkup =
-    '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
+  '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
 
 colors = [
   "blue",
@@ -44,49 +44,49 @@ colors = [
   "aqua"
 ];
 function renderChart(data, labels, nodeId, color) {
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myChart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            strokeColor: "yellow",
-            fillColor: "yellow",
+  var ctx = document.getElementById("myChart").getContext("2d");
+  var myChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      strokeColor: "yellow",
+      fillColor: "yellow",
 
-            datasets: [
-                {
-                    label: '3 sigma',
-                    data: globalNodes[nodeId]["sigma3"],
-                    backgroundColor: "red",
-                    fill: false
-                },
-                {
-                    label: 'Avg',
-                    data: globalNodes[nodeId]["running_average"],
-                    backgroundColor: "green",
-                    fill: false
-                },
-                {
-                    label: `Node ${nodeId}`,
-                    data: data,
-                    backgroundColor: color,
-                }
-            ]
+      datasets: [
+        {
+          label: "3 sigma",
+          data: globalNodes[nodeId]["sigma3"],
+          backgroundColor: "red",
+          fill: false
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            yAxes: [
-              {
-                display: true,
-                ticks: {
-                  min: 0,
-                  max: 10
-                }
-              }
-            ]
+        {
+          label: "Avg",
+          data: globalNodes[nodeId]["running_average"],
+          backgroundColor: "green",
+          fill: false
+        },
+        {
+          label: `Node ${nodeId}`,
+          data: data,
+          backgroundColor: color
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [
+          {
+            display: true,
+            ticks: {
+              min: 0,
+              max: 10
+            }
           }
+        ]
       }
+    }
   });
 }
 
@@ -128,7 +128,7 @@ var hubIconPath = "icons/icon2.png";
 var nodeIconPath = "icons/icon3.png";
 
 var hubIcon = new H.map.DomIcon(
-    '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient2" cx="0.5" cy="0.5" r="0.9"><stop offset="0%" stop-color="orange"/><stop offset="100%" stop-color="blue"/></radialGradient></defs><rect x="0" y="0" rx="3" ry="3" width="30" height="30" fill="#385a7c" stroke="black" stroke-width="1" stroke-linecap="butt"/> </svg>'
+  '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient2" cx="0.5" cy="0.5" r="0.9"><stop offset="0%" stop-color="orange"/><stop offset="100%" stop-color="blue"/></radialGradient></defs><rect x="0" y="0" rx="3" ry="3" width="30" height="30" fill="#385a7c" stroke="black" stroke-width="1" stroke-linecap="butt"/> </svg>'
 );
 
 var nodeIcon = new H.map.Icon(
@@ -173,27 +173,27 @@ function drawHubsAndNodes(hubsAndNodes) {
       id: h["id"],
       surprise: h["surprise_factor"]
     });
-    // marker.addEventListener(
-    //   "tap",
-    //   function(evt) {
-    //     // event target is the marker itself, group is a parent event target
-    //     // for all objects that it contains
-    //     d = evt.target.getData();
-    //     sd =
-    //       '<div style="font-size: x-small;"><b>ID:</b> ' +
-    //       d["id"] +
-    //       "<br><b>Surprise:</b> " +
-    //       d["surprise"].toFixed(2) +
-    //       "</div>";
-    //     var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
-    //       // read custom data
-    //       content: sd
-    //     });
-    //     // show info bubble
-    //     ui.addBubble(bubble);
-    //   },
-    //   false
-    // );
+    marker.addEventListener(
+      "tap",
+      function(evt) {
+        // event target is the marker itself, group is a parent event target
+        // for all objects that it contains
+        d = evt.target.getData();
+        sd =
+          '<div style="font-size: x-small;"><b>ID:</b> ' +
+          d["id"] +
+          "<br><b>Surprise:</b> " +
+          d["surprise"].toFixed(2) +
+          "</div>";
+        var bubble = new H.ui.InfoBubble(evt.target.getPosition(), {
+          // read custom data
+          content: sd
+        });
+        // show info bubble
+        ui.addBubble(bubble);
+      },
+      false
+    );
     var color = colors[h["id"]];
     if (past_colors.length != 0) {
       current_distances = [];
@@ -213,7 +213,6 @@ function drawHubsAndNodes(hubsAndNodes) {
     }
     current_colors.push(color);
     current_hub_centers.push(h["position"]);
-    // var linestring = new H.geo.LineString();
 
     var avg_radius = 0;
     var n = h["nodes"].length;
@@ -237,16 +236,6 @@ function drawHubsAndNodes(hubsAndNodes) {
       map.addObject(marker2);
     }
     map.addObject(marker);
-    // var polyline = new H.map.Polyline(linestring, {
-    //   style: {
-    //     lineWidth: 10,
-    //     fillColor: color,
-    //     strokeColor: color,
-    //     isClosed: true
-    //   },
-    //   isClosed: true
-    // });
-    // map.addObject(polyline);
     var circle = new H.map.Circle(
       {
         lat: h["position"][1],
