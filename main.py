@@ -7,6 +7,7 @@ class Exposer:
     def __init__(self):
         self.storage = Storage(5, 5, 60)
         self.storage.init_nodes()
+        self.affinity_algo = True
 
         self.app = Flask(__name__)
         self.app.logger.disabled = True
@@ -29,6 +30,18 @@ class Exposer:
             resp.headers['Access-Control-Allow-Origin'] = '*'
             resp.headers['Content-Type'] = 'application/json'
             return resp
+
+        @sef.app.route('/toggle_cluster')
+        def toggle_cluster():
+            if self.affinity_algo:
+                self.storage.maths.type = 'affinity'
+            else:
+                self.storage.maths.type = 'precomputed'
+
+            self.affinity_algo = not self.affinity_algo
+
+            self.trigger_calc()
+
 
     def start(self):
         print('Exposer run on port 5000')
