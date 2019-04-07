@@ -41,11 +41,11 @@ class Algo:
         current_mean = np.mean(current_time_series_windowed)
 
         if (current_mean + current_time_series_3sigma) > (past_mean + past_time_series_3sigma):
-            return np.around((current_mean + current_time_series_3sigma) - (past_mean + past_time_series_3sigma), 2)
+            return np.around((current_mean + current_time_series_3sigma) - (past_mean + past_time_series_3sigma), 2), current_time_series_3sigma
         elif(current_mean - current_time_series_3sigma) < (past_mean - past_time_series_3sigma):
-            return np.around((past_mean - past_time_series_3sigma) - (current_mean - current_time_series_3sigma), 2)
+            return np.around((past_mean - past_time_series_3sigma) - (current_mean - current_time_series_3sigma), 2), current_time_series_3sigma
         else:
-            return 0.0
+            return 0.0, current_time_series_3sigma
 
     def deg2rad(self, deg):
         return deg * np.pi/180
@@ -103,5 +103,5 @@ if __name__ == "__main__":
     run1 = alg.calculate_node_severity(ts1, 100, 60, 0)
     run2 = alg.calculate_node_severity(ts1, 100, 200, run1)
     print(f"Run 1 {run1}, run 2 {run2}")
-    surprise = alg.three_sigma_test(ts1, ts2, 100, 300)
+    surprise, _ = alg.three_sigma_test(ts1, ts2, 100, 300)
     print(surprise)
