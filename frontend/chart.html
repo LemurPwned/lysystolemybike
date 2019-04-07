@@ -1,39 +1,46 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+<head>
+    <title>Hub</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.0/mapsjs-ui.css?dp-version=1549984893" />
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
 
-    <title>Clustering</title>
-  </head>
-  <style>
-    .container {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-  <body>
-    <div style="width: 100%; overflow: hidden;">
-      <div style="width: 600px; float: right;">
-        <canvas id="myChart"></canvas>
-      </div>
-      <div style="margin-right: 620px;">  
-        <div id="map" style="width: 600px; height: 400px; background: grey" />
-      </div>
+</head>
+
+<body style="background-color: #f2f2f2" style="position: relative;">
+    <nav class="navbar navbar-dark bg-dark mxauto">
+        <span class="navbar-brand">Hub</span>
+    </nav>
+    <div style="width: 100%; height: 100%;">
+        <div id="map" style="width: 100%; height: 1046px; background: grey; position: absolute; z-index: -1;">
+            <div class="card shadow fixed-bottom pull-right" style="width: 60%; height: 30%; position: absolute; z-index: 2;">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
     </div>
-  </body>
+</body>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
-  <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
-  <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
-  <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
-  <body>
-    <script type="text/javascript" src="./render.js"></script>
-    <script type="text/javascript" src="./map_script.js"></script>
-  </body>
+
+
+<script type="text/javascript" src="./render.js"></script>
+<script type="text/javascript" src="./map_script.js"></script>
+
 </html>

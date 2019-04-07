@@ -30,22 +30,29 @@ class HereAPI:
 
         if self.cache is None:
             for _ in tqdm.trange(node_number):
+                x = random.random()*(self.xlim[1]-self.xlim[0])+self.xlim[0]
+                y = random.random()*(self.ylim[1]-self.ylim[0])+self.ylim[0]
+                center = (x, y)
                 try:
-                    x = random.random()*(self.xlim[1]-self.xlim[0])+self.xlim[0]
-                    y = random.random()*(self.ylim[1]-self.ylim[0])+self.ylim[0]
-                    center = (x, y)
-                    url = self.url_builder.build(center)
-                    r = requests.get(url)
-                    parsed = self.parse_street(r.json())
-
+                    parsed = self.sample_centroid(center)
                     res.extend(parsed)
                     centers.append(center)
                 except:
                     pass
+
             self.cache = (centers, res)
             return centers, res
         else:
             return self.cache
+
+    def sample_centroid(self, centroid):
+        try:
+            url = self.url_builder.build(centroid)
+            r = requests.get(url)
+            parsed = self.parse_street(r.json())
+            return parsed
+        except:
+            return None
 
     def parse_street(self, res):
         aux = set()
