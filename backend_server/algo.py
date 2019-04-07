@@ -68,9 +68,7 @@ class Algo:
         """
         if self.type == 'affinity':
             kmeans_matrix = np.empty(shape=(len(node_list), len(node_list)))
-            # kmeans_weight = np.empty(shape=(len(node_list), ))
             for i in range(len(node_list)):
-                # kmeans_weight[i] = node_list[i].severity
                 for j in range(i):
                     kmeans_matrix[i, j] = self.calc_distance(
                         *node_list[i].position, *node_list[j].position, node_list[i].severity, node_list[j].severity)
