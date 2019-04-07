@@ -32,7 +32,8 @@ class Exposer:
 
     def start(self):
         print('Exposer run on port 5000')
-        self.app.run(host='0.0.0.0', debug=False)
+        self.app.run(host='0.0.0.0', debug=True)
+
 
 if __name__ == "__main__":
     exposer = Exposer()
