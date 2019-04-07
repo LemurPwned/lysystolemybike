@@ -16,15 +16,37 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return d;
 }
 
+
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
+
+legend = {'severe': 1, 'serious': 1, 'important':1, 'mild': 0}
+function draw_legend(){
+    var container = document.getElementById('container');
+  
+    for (var key in colorList) {
+        var boxContainer = document.createElement("DIV");
+        var box = document.createElement("DIV");
+        var label = document.createElement("SPAN");
+
+        label.innerHTML = key;
+        box.className = "box";
+        box.style.backgroundColor = colorList[key];
+
+        boxContainer.appendChild(box);
+        boxContainer.appendChild(label);
+
+        container.appendChild(boxContainer);
+
+   }
+}
+}
+
 var current_hub_centers = [];
 var past_hub_centers = [];
 var past_colors = [];
-const queue_len = 5;
 
-var hub_tracker = [];
 var svgMarkup =
   '<svg width="120" height="240" version="1.1" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="RadialGradient1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></radialGradient><mask id="myMask" x="0" y="0" width="100%" height="100%"><circle cx="25%" cy="12%" r="15%" fill="url(#RadialGradient1)"/></mask></defs><rect mask="url(#myMask)" x="0" y="0" rx="15" ry="15" width="60" height="60" fill="${COLOR}"/> </svg>';
 
@@ -149,8 +171,6 @@ function drawHubsAndNodes(hubsAndNodes) {
   nodes = hubsAndNodes["nodes"];
   globalNodes = nodes;
 
-  var group = new H.map.Group();
-  map.addObject(group);
 
   // Remove all markets
   for (const o of map.getObjects()) {
