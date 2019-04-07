@@ -176,6 +176,9 @@ function drawHubsAndNodes(hubsAndNodes) {
     if (o instanceof H.map.Marker) {
       map.removeObject(o);
     }
+    if (o instanceof H.map.Circle) {
+      map.removeObject(o);
+    }
   }
 
   current_hub_centers = [];
@@ -229,18 +232,54 @@ function drawHubsAndNodes(hubsAndNodes) {
     }
     current_colors.push(color);
     current_hub_centers.push(h["position"]);
+    // var linestring = new H.geo.LineString();
+
+    var avg_radius = 0;
+    var n = h["nodes"].length;
     var nodeIcon = new H.map.DomIcon(svgMarkup.replace("${COLOR}", color));
     for (const ni of h["nodes"]) {
       var coords = {
         lat: nodes[ni]["position"][1],
         lng: nodes[ni]["position"][0]
       };
+      // linestring.pushPoint(coords);
+      var dist = getDistanceFromLatLonInKm(
+        nodes[ni]["position"][1],
+        nodes[ni]["position"][0],
+        h["position"][1],
+        h["position"][0]
+      );
+      avg_radius += dist / n;
       var marker2 = new H.map.DomMarker(coords, { icon: nodeIcon });
-      marker2.setData({ type: "node", id: ni, color: colors[h["id"]] });
+      marker2.setData({ type: "node", id: ni, color: color });
       marker2.addEventListener("pointerenter", getNodeData);
       map.addObject(marker2);
     }
     map.addObject(marker);
+    // var polyline = new H.map.Polyline(linestring, {
+    //   style: {
+    //     lineWidth: 10,
+    //     fillColor: color,
+    //     strokeColor: color,
+    //     isClosed: true
+    //   },
+    //   isClosed: true
+    // });
+    // map.addObject(polyline);
+    var circle = new H.map.Circle(
+      {
+        lat: h["position"][1],
+        lng: h["position"][0]
+      },
+      avg_radius * 1000,
+      {
+        style: {
+          fillColor: color,
+          strokeColor: color
+        }
+      }
+    );
+    map.addObject(circle);
   }
   // current now become past
   past_hub_centers = current_hub_centers.slice();
