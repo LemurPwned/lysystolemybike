@@ -12,10 +12,11 @@ class Storage:
         self.maths = Algo(hub_number)
         self.source = HereAPI()
 
-        centers, res = self.source.sample(node_number)
+        # centers, res = self.source.sample(node_number)
 
-        self._nodes = [Node(i, c, r)
-                       for c, r, i in zip(centers, res, range(len(res)))]
+        # self._nodes = [Node(i, c, r)
+        #                for c, r, i in zip(centers, res, range(len(res)))]
+        self._nodes = [Node(i, np.random.random((2))*2-1, 0) for i in range(node_number)]
         self.cracow_center = np.array([50, 19.9])
 
         self._hubs = []
@@ -74,22 +75,23 @@ class Storage:
 
     def update_nodes(self):
         for i in range(len(self._nodes)):
-            self._nodes[i].update_day(self.random_source[i].sample())
+            noise = self.random_source[i].sample()
+            try:
+                self._nodes[i].update_day(noise*(self._nodes[i].history['today'][-1]*0.1 + 0.4*np.random.pareto(3., 1)))
+            except IndexError:
+                self._nodes[i].update_day(noise)
 
 
 if __name__ == "__main__":
     storage = Storage(1, 5, 30)
     plt.figure()
     storage.init_nodes()
-    # while True:
-    node = storage.get_data_and_trigger_algo()[0][0]
-    storage.update_nodes()
-    plt.plot([i for i in range(len(node.history["today"]))],
-             node.history["today"], "b")
-
-    def mean(i): return np.mean(
-        list(node.history[storage.day_of_week])[i:i + storage.time_window])
-    r_mean = [mean(i) for i in range(len(node.history["today"]))]
-    plt.plot([i for i in range(len(r_mean))], r_mean, "r")
-    plt.xlim(0, 48)
-    plt.show()
+    while True:
+        node = storage.get_data_and_trigger_algo()[0][0]
+        # storage.update_nodes()
+        plt.plot([i for i in range(len(node.history["today"]))], node.history["today"], "b")
+        plt.ylim(0, 10)
+        plt.xlim(0, 48)
+        plt.pause(0.01)
+        plt.cla()
+        plt.draw()
