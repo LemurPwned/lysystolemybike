@@ -122,7 +122,6 @@ function drawHubsAndNodes(hubsAndNodes) {
       map.removeObject(o);
     }
   }
-
   for (const h of hubs) {
     // Create an icon object, an object with geographic coordinates and a marker:
     var coords = { lat: h["position"][1], lng: h["position"][0] };
@@ -164,18 +163,17 @@ function drawHubsAndNodes(hubsAndNodes) {
 }
 
 function timerCallback() {
+  $.ajax({
+    url: "http://localhost:5000/trigger_calc",
+    type: "GET",
+    dataType: "json",
+    success: drawHubsAndNodes,
+    error: function(result) {
+      alert(result.status + " " + result.statusText);
+    }
+  });
 
-    $.ajax({
-        url: "http://localhost:5000/trigger_calc",
-        type: "GET",
-        dataType: "json",
-        success: drawHubsAndNodes,
-        error: function(result) {
-          alert(result.status + " " + result.statusText);
-        }
-    });
-
-    setTimeout(timerCallback, 3000);
+  setTimeout(timerCallback, 3000);
 }
 
 timerCallback();
