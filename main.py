@@ -42,6 +42,12 @@ class Exposer:
 
             return self.trigger_calc()
 
+        @self.app.route('/change_cluster_size')
+        def change_cluster_size():
+            self.storage.maths.cluster_size = request.args.get('cluster_size')
+
+            return self.trigger_calc()
+
 
     def start(self):
         print('Exposer run on port 5000')
