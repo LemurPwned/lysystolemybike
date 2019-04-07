@@ -139,8 +139,8 @@ var defaultLayers = platform.createDefaultLayers({
 // Step 2: initialize a map
 var map = new H.Map(document.getElementById("map"), defaultLayers.normal.map, {
     center: new H.geo.Point(50.0647, 19.945),
-    zoom: 13,
-    pixelRatio: pixelRatio
+    zoom: 12.5,
+    pixelRatio: pixelRatio,
 });
 
 // Define icon
