@@ -7,7 +7,7 @@ class Algo:
     def __init__(self, hub_number):
         self.running_average = 0.0
         self.hub_number = hub_number
-        self.type = 'affinity'
+        self.type = 'else'
         self.clf = KMeans(n_clusters=self.hub_number)
 
     def calculate_node_severity(self, time_series, time_window, current_time, running_average):
