@@ -228,7 +228,7 @@ function drawHubsAndNodes(hubsAndNodes) {
         lng: nodes[ni]["position"][0]
       };
       var marker2 = new H.map.DomMarker(coords, { icon: nodeIcon });
-      marker2.setData({ type: "node", id: ni, color: colors[h["id"]] });
+      marker2.setData({ type: "node", id: ni, color: color });
       marker2.addEventListener("pointerenter", getNodeData);
       map.addObject(marker2);
     }
